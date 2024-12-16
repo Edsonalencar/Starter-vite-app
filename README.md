@@ -1,50 +1,145 @@
-# React + TypeScript + Vite
+# Base Project Template
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este repositório é um template base para projetos utilizando as seguintes tecnologias:
 
-Currently, two official plugins are available:
+- **Vite** como bundler.
+- **React** para construção da interface.
+- **TailwindCSS** para estilização.
+- **Ant Design** para componentes prontos e design system.
+- **Atomic Design** como padrão de componentização.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Visão Geral
 
-## Expanding the ESLint configuration
+Este projeto foi desenvolvido para acelerar o início de novos aplicativos, oferecendo uma estrutura consistente para autenticação, configurações iniciais e um sistema organizacional baseado no Atomic Design.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Estrutura do Projeto
 
-- Configure the top-level `parserOptions` property like this:
+Abaixo está um resumo da estrutura de pastas:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+src/
+├── components/      # Componentes organizados seguindo Atomic Design
+├── services/        # Integrações com APIs e funções relacionadas
+├── config/          # Configurações do sistema [rotas, thema do ant, items do menu]
+├── utils/           # Funções utilitárias e formatadores
+├── styles/          # Estilos globais e configurações do TailwindCSS
+├── assets/          # Imagens, ícones e outros recursos
+└── App.jsx          # Arquivo principal do React
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Tecnologias
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- [**Vite**](https://vite.dev/guide): Build rápido e eficiente para desenvolvimento e produção.
+- **React**: Biblioteca para construir interfaces de usuário.
+- **TailwindCSS**: Framework de CSS utilitário para estilização moderna.
+- **Ant Design**: Biblioteca de componentes com estilos consistentes.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Atomic Design
+
+Os componentes estão organizados conforme o padrão de Atomic Design:
+
+1. **Atoms**: Componentes básicos e indivisíveis (ex.: botões, inputs).
+2. **Molecules**: Combinação de átomos para formar blocos funcionais.
+3. **Organisms**: Combinação de módulos e elementos complexos.
+4. **Templates**: Estruturação da disposição das páginas.
+5. **Pages**: Representação completa de uma página (Pagina final apresentada ao usuário).
+
+## Autenticação
+
+A autenticação foi implementada com foco em extensibilidade e segurança, suportando:
+
+- Login e logout.
+- Controle de acesso baseado em permissões.
+- Persistência de sessão.
+
+## Configuração e Services
+
+### Pasta `services`
+
+A pasta `services` contém as integrações com APIs externas e as funções relacionadas à comunicação com o backend. Cada serviço segue a estrutura modular:
+
+- Cada pasta representa um serviço específico e pode conter o arquivo  `service.ts` e `dto.ts`.
+- Uso de uma abstração do Fetch Api chamada BaseApi.
+- Disponibilidade para utilizar o GenericService, classe que implementa automaticamente um crud básico para API's padronizadas.
+- Centralização de URLs e headers para facilitar a manutenção.
+
+Exemplo de service completo com GenericService:
+
+```javascript
+export const UserService = new GenericService('/payment/customers')
 ```
+
+Exemplo de service usando somente BaseApi:
+
+```javascript
+const API = new BaseApi();
+
+export class UserService {
+  static async login({
+    username,
+    password,
+  }: LoginType): Promise<ResponseDTO<string>> {
+    const res = await API.postNoAuth("/users/login", {
+      username,
+      password,
+    });
+
+    if (res == undefined)
+      throw new AbstractException("Alguma coisa aconteceu errado!");
+
+    return res as ResponseDTO<string>;
+  }
+}
+```
+
+### Pasta `config`
+
+A pasta `config` centraliza as configurações globais da aplicação:
+
+- **Items do menu**: Estrutura o menu de navegação lateral do LayoutTemplate
+- **Configurações de tema**: Define configurações específicas para o TailwindCSS e Ant Design.
+- **Rotas**: Mapeamento de rotas da aplicação para facilitar o gerenciamento de navegação.
+
+As rotas seguem um padrão de montagem definido pelo tipo RenderRouter!
+
+Exemplo:
+
+```javascript
+{
+  path: "/app",
+  component: LayoutTemplate,
+  children: [{ path: "/app", component: StarterPage }],
+}
+```
+
+## Como Usar Este Template
+
+1. Clone o repositório:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure o arquivo `.env`:
+   ```env-example
+   Copie e cole e renomeei o arquivo .env-example para .env
+   ```
+
+4. Inicie o projeto em modo de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+5. Acesse em: [http://localhost:3000](http://localhost:3000).
+
+## Contribuição
+
+Se você deseja contribuir com este projeto, envie um pull request com as alterações ou melhorias desejadas.
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
