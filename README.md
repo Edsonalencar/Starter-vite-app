@@ -30,9 +30,12 @@ src/
 ## Tecnologias
 
 - [**Vite**](https://vite.dev/guide): Build rápido e eficiente para desenvolvimento e produção.
-- **React**: Biblioteca para construir interfaces de usuário.
-- **TailwindCSS**: Framework de CSS utilitário para estilização moderna.
-- **Ant Design**: Biblioteca de componentes com estilos consistentes.
+- [**React**](https://react.dev): Biblioteca para construir interfaces de usuário.
+- [**React Router Dom**](https://reactrouter.com/start/library/routing): Biblioteca para roteamento de paginas do React.
+- [**TailwindCSS**](https://tailwindcss.com/docs/flex): Framework de CSS utilitário para estilização moderna.
+- [**Ant Design**](https://ant.design/components/button): Biblioteca de componentes com estilos consistentes.
+- [**Ant Design plots**](https://ant-design-charts.antgroup.com/en/examples): Biblioteca construção de graficos com estilos consistentes.
+- [**React Icons**](https://react-icons.github.io/react-icons): Biblioteca de icones.
 
 ## Atomic Design
 
