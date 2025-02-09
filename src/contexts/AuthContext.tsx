@@ -16,6 +16,7 @@ import { isTokenValid } from "@/utils/helpers";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserService } from "@/services/userService/service";
 import { toast } from "react-toastify";
+import { config } from "@/config";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -51,8 +52,7 @@ export function AuthProvider({ children }: AuthContextProviderProps) {
 
   const [user, setUser] = useState<UserType | null>(null);
 
-  const nextAuthTokenName =
-    import.meta.env.VITE_NEXT_AUTH_TOKEN_NAME ?? "nextauth.token";
+  const nextAuthTokenName = config.NEXT_AUTH_TOKEN_NAME;
 
   const isAuthenticated = !!user;
 

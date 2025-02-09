@@ -5,17 +5,15 @@ import { InvalidArgException } from "./handler/InvalidArgException";
 import { UnauthorizedException } from "./handler/UnauthorizedExption";
 import { toast } from "react-toastify";
 import { apiAnchorTo, ArgsError, ResponseDTO } from "./interface";
+import { config } from "@/config";
 
-const FRONT_URL = import.meta.env.VITE_FRONTEND;
-
-const nextAuthTokenName =
-  import.meta.env.VITE_NEXT_AUTH_TOKEN_NAME ?? "nextauth.token";
-const nextAuthRedirectName =
-  import.meta.env.VITE_NEXT_AUTH_REDIRECT_NAME ?? "nextauth.redirect";
+const nextAuthTokenName = config.NEXT_AUTH_TOKEN_NAME;
+const nextAuthRedirectName = config.NEXT_AUTH_REDIRECT_NAME;
+const FRONT_URL = config.FRONT_URL;
 
 export class BaseApi {
   public isExpired = false;
-  private baseAPI = import.meta.env.VITE_BACKEND + "/api";
+  private baseAPI = config.BACKEND_URL + "/api";
 
   private buildUrlWithParams(
     rota: string,

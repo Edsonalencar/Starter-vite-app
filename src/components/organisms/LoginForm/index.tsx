@@ -5,13 +5,14 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { LoginType } from "@/types";
 import { AuthContext } from "@/contexts/AuthContext";
 import CryptoJS from "crypto-js";
+import { config } from "@/config";
 
 export const LoginForm = () => {
   const [form] = Form.useForm<LoginType>();
   const [loading, setLoading] = useState(false);
 
   const { signIn } = useContext(AuthContext);
-  const secret = import.meta.env.VITE_SECRET_KEY || "";
+  const secret = config.SECRET_KEY;
 
   useEffect(() => {
     const rememberMe = localStorage.getItem("nectar_remember");

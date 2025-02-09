@@ -1,4 +1,6 @@
-const API_URL = import.meta.env.VITE_FRONTEND;
+import { config } from "@/config";
+
+const API_URL = config.FRONT_URL;
 
 export const anchorTo = async (path: string) => {
   window.parent.location.href = API_URL + path;
