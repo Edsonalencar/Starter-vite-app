@@ -1,31 +1,70 @@
 ## Generic Service
 
-Como o nome sugeri, a intenção do generic service é estruturar um service generico que implementa o crud basico de cada entidade, para isso ele segue um padrão de chamada que deve ser seguido pelas rotas, toda rota que fugir desse psdrão deverá ser estendida dentro do generic, segue instruções.
+### Visão Geral
 
-## Metodos padrões e suas rotas Default
+O **GenericService** tem como objetivo fornecer uma estrutura genérica para implementação de serviços com operações básicas de CRUD para cada entidade. Ele segue um padrão de chamadas definido, garantindo consistência nas requisições. Para rotas que fogem desse padrão, é possível estender a classe e adicionar métodos específicos.
 
-ao instânciar um GenericService é passado o endpoint da instancia e todos os metodos serão aplicados na raiz dessa instância.
+Além disso, o `GenericService` recebe uma instância de `IApiService`, permitindo flexibilidade na escolha da base de requisições. Isso significa que qualquer biblioteca de requisição HTTP pode ser utilizada, como Axios, Fetch ou outra implementação customizada, desde que implemente a interface `IApiService`.
 
-- create `/`: Post na raiz do endpoint passando um Data/Payload.
-- get `/`: Get na raiz do endpoint.
-- getById `/{id}`: Get de um item.
-- update `/{id}`: Update de um item.
-- update `/{id}`: Delete de um item.
-- getPage `/page/{page}`: Post passando a pagina desejada e um Data que pode conter as instruções de filtro
+🚨 OBS: O `GenericService` só funciona se o backend tiver implementações padronizadas, seguindo as instruções abaixo.
 
-### Exemplo de uma instância padrão.
+---
 
-```export const UserService = new GenericService('/payment/customers')```
+## Métodos Padrões e Rotas Default
 
+Ao instanciar um `GenericService`, é passado o endpoint base da instância, e todos os métodos serão aplicados sobre essa raiz.
 
-### Exemplo de uma instância com adição de um metodo especifico.
+| Método   | Rota Padrão      | Descrição |
+|----------|-----------------|------------|
+| `create` | `/`             | POST na raiz do endpoint enviando um payload (dados). |
+| `get`    | `/`             | GET na raiz do endpoint para buscar uma lista de itens. |
+| `getById`| `/{id}`         | GET para buscar um item específico pelo ID. |
+| `update` | `/{id}`         | PUT para atualizar um item específico pelo ID. |
+| `patch`  | `/{id}`         | PATCH para modificar parcialmente um item específico pelo ID. |
+| `delete` | `/{id}`         | DELETE para remover um item específico pelo ID. |
+| `getPage`| `/page/{page}`  | POST passando a página desejada e um payload com filtros e parâmetros de paginação. |
 
+---
+
+## Exemplo de Uso
+
+### **Instância Padrão**
+
+```typescript
+import axios from "axios";
+import { GenericService } from "./GenericService";
+import { IApiService } from "./IApiService";
+
+const apiInstance: IApiService = axios.create({ baseURL: "https://api.example.com" }) as IApiService;
+export const UserService = new GenericService('/payment/customers', apiInstance);
 ```
-class userService extends GenericService {
-  getMetricsPage = async (page: number = 0, data:MetricsDTO) => {
-      return await this.getApi().post<ResponseData<Page<UserMetrics>>>(`${this.getURL()}/metrics/page/${page}`, data);
+
+---
+
+### **Instância com Método Específico**
+
+Caso seja necessário adicionar um método específico que não siga o padrão de CRUD, podemos estender o `GenericService` e adicionar o novo método:
+
+```typescript
+class UserService extends GenericService {
+  getMetricsPage = async (page: number = 0, data: MetricsDTO) => {
+    return await this.getApi().post<ResponseDTO<Page<UserMetrics>>>(
+      `${this.getURL()}/metrics/page/${page}`,
+      data
+    );
   };
 }
 
-export const UserService = new userService('/payment/customers')
+export const userService = new UserService('/payment/customers', apiInstance);
 ```
+
+---
+
+## **Benefícios do GenericService**
+✅ **Padronização**: Todas as entidades seguem um modelo consistente de chamadas à API.  
+✅ **Reutilização**: Reduz duplicação de código ao centralizar operações comuns.  
+✅ **Extensibilidade**: Permite sobrescrever ou adicionar novos métodos específicos para cada entidade.  
+✅ **Baixo Acoplamento**: Facilita a manutenção e a troca de implementação de API sem impacto direto nas chamadas.  
+✅ **Flexibilidade**: Permite a utilização de diferentes clientes HTTP, como Axios, Fetch ou qualquer outra implementação compatível com `IApiService`.  
+
+Caso precise adicionar métodos customizados, basta estender a classe e definir novas funções seguindo as diretrizes acima.

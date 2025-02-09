@@ -13,31 +13,6 @@ export interface ReloadRef {
   reload: () => void;
 }
 
-export type ArgsError = {
-  errors?: object;
-  message?: string;
-};
-
-export interface ResponseDTO<T> {
-  data?: T | any;
-  time: string;
-}
-
-export interface Page<T> {
-  totalElements: number;
-  totalPages: number;
-  pageable: any;
-  number: number;
-  content: Array<T>;
-  numberOfElements: number;
-  hasContent: boolean;
-  hasNext: boolean;
-  hasPrevious: boolean;
-  first: boolean;
-  last: boolean;
-  size: number;
-}
-
 export interface Pageable<T> {
   content: Array<T>;
   pageable: {

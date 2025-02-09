@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import { decodeJwt } from "jose";
-import { AbstractException } from "@/services/handler/AbstractException";
+import { AbstractException } from "@/services/baseApi/handler/AbstractException";
 
 import { LoginType, UserType } from "@/types";
 import { handleError } from "@/utils/handleError";

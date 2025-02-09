@@ -68,32 +68,45 @@ A pasta `services` contém as integrações com APIs externas e as funções rel
 
 Exemplo de service completo com GenericService:
 
-```javascript
-export const UserService = new GenericService('/payment/customers')
+#### Instância Padrão
+
+```typescript
+import axios from "axios";
+import { GenericService } from "./GenericService";
+import { IApiService } from "./IApiService";
+
+const apiInstance: IApiService = axios.create({ baseURL: "https://api.example.com" }) as IApiService;
+export const UserService = new GenericService('/payment/customers', apiInstance);
 ```
+---
 
-Exemplo de service usando somente BaseApi:
+#### Instância com Método Específico
 
-```javascript
-const API = new BaseApi();
+Caso seja necessário adicionar um método específico que não siga o padrão de CRUD, podemos estender o `GenericService` e adicionar o novo método:
 
-export class UserService {
-  static async login({
-    username,
-    password,
-  }: LoginType): Promise<ResponseDTO<string>> {
-    const res = await API.postNoAuth("/users/login", {
-      username,
-      password,
-    });
-
-    if (res == undefined)
-      throw new AbstractException("Alguma coisa aconteceu errado!");
-
-    return res as ResponseDTO<string>;
-  }
+```typescript
+class UserService extends GenericService {
+  getMetricsPage = async (page: number = 0, data: MetricsDTO) => {
+    return await this.getApi().post<ResponseDTO<Page<UserMetrics>>>(
+      `${this.getURL()}/metrics/page/${page}`,
+      data
+    );
+  };
 }
+
+export const userService = new UserService('/payment/customers', apiInstance);
 ```
+
+---
+
+## **Benefícios do GenericService**
+✅ **Padronização**: Todas as entidades seguem um modelo consistente de chamadas à API.  
+✅ **Reutilização**: Reduz duplicação de código ao centralizar operações comuns.  
+✅ **Extensibilidade**: Permite sobrescrever ou adicionar novos métodos específicos para cada entidade.  
+✅ **Baixo Acoplamento**: Facilita a manutenção e a troca de implementação de API sem impacto direto nas chamadas.  
+✅ **Flexibilidade**: Permite a utilização de diferentes clientes HTTP, como Axios, Fetch ou qualquer outra implementação compatível com `IApiService`.  
+
+Caso precise adicionar métodos customizados, basta estender a classe e definir novas funções seguindo as diretrizes acima.
 
 ### Pasta `config`
 

@@ -3,9 +3,10 @@ import { decodeJwt } from "jose";
 import { AbstractException } from "./handler/AbstractException";
 import { InvalidArgException } from "./handler/InvalidArgException";
 import { UnauthorizedException } from "./handler/UnauthorizedExption";
-import { ArgsError, ResponseDTO } from "../types";
-import { anchorTo } from "../utils/link";
 import { toast } from "react-toastify";
+import { apiAnchorTo, ArgsError, ResponseDTO } from "./interface";
+
+const FRONT_URL = import.meta.env.VITE_FRONTEND;
 
 const nextAuthTokenName =
   import.meta.env.VITE_NEXT_AUTH_TOKEN_NAME ?? "nextauth.token";
@@ -146,7 +147,7 @@ export function checkToken(token?: string) {
     if (exp < currentTime) {
       localStorage.removeItem(nextAuthTokenName);
       localStorage.removeItem(nextAuthRedirectName);
-      anchorTo("/login");
+      apiAnchorTo(FRONT_URL + "/login");
 
       toast.error("Sessão Expirada, favor fazer login novamente!");
       return isTokenValid;
@@ -169,7 +170,7 @@ export async function requestBody<T>(
     if (baseIn != null && !baseIn.isExpired) {
       localStorage.removeItem(nextAuthTokenName);
       localStorage.removeItem(nextAuthRedirectName);
-      anchorTo("/login");
+      apiAnchorTo(FRONT_URL + "/login");
       toast.error("Ação não autorizada!");
     }
   } else handlerExption(res.status, await res.json());
@@ -192,7 +193,7 @@ function handlerExption(status: number, res: ResponseDTO<any>) {
   if (status == 401) {
     localStorage.removeItem(nextAuthTokenName);
     localStorage.removeItem(nextAuthRedirectName);
-    anchorTo("/login");
+    apiAnchorTo(FRONT_URL + "/login");
     throw new UnauthorizedException(res.data as string);
   } else if (status == 400) {
     handlerExceptionResponse(res.data);
