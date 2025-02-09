@@ -55,58 +55,9 @@ A autenticação foi implementada com foco em extensibilidade e segurança, supo
 - Controle de acesso baseado em permissões.
 - Persistência de sessão.
 
+---
+
 ## Configuração e Services
-
-### Pasta `services`
-
-A pasta `services` contém as integrações com APIs externas e as funções relacionadas à comunicação com o backend. Cada serviço segue a estrutura modular:
-
-- Cada pasta representa um serviço específico e pode conter o arquivo  `service.ts` e `dto.ts`.
-- Uso de uma abstração do Fetch Api chamada BaseApi.
-- Disponibilidade para utilizar o GenericService, classe que implementa automaticamente um crud básico para API's padronizadas.
-- Centralização de URLs e headers para facilitar a manutenção.
-
-Exemplo de service completo com GenericService:
-
-#### Instância Padrão
-
-```typescript
-import axios from "axios";
-import { GenericService } from "./GenericService";
-import { IApiService } from "./IApiService";
-
-const apiInstance: IApiService = axios.create({ baseURL: "https://api.example.com" }) as IApiService;
-export const UserService = new GenericService('/payment/customers', apiInstance);
-```
----
-
-#### Instância com Método Específico
-
-Caso seja necessário adicionar um método específico que não siga o padrão de CRUD, podemos estender o `GenericService` e adicionar o novo método:
-
-```typescript
-class UserService extends GenericService {
-  getMetricsPage = async (page: number = 0, data: MetricsDTO) => {
-    return await this.getApi().post<ResponseDTO<Page<UserMetrics>>>(
-      `${this.getURL()}/metrics/page/${page}`,
-      data
-    );
-  };
-}
-
-export const userService = new UserService('/payment/customers', apiInstance);
-```
-
----
-
-## **Benefícios do GenericService**
-✅ **Padronização**: Todas as entidades seguem um modelo consistente de chamadas à API.  
-✅ **Reutilização**: Reduz duplicação de código ao centralizar operações comuns.  
-✅ **Extensibilidade**: Permite sobrescrever ou adicionar novos métodos específicos para cada entidade.  
-✅ **Baixo Acoplamento**: Facilita a manutenção e a troca de implementação de API sem impacto direto nas chamadas.  
-✅ **Flexibilidade**: Permite a utilização de diferentes clientes HTTP, como Axios, Fetch ou qualquer outra implementação compatível com `IApiService`.  
-
-Caso precise adicionar métodos customizados, basta estender a classe e definir novas funções seguindo as diretrizes acima.
 
 ### Pasta `config`
 
@@ -127,6 +78,21 @@ Exemplo:
   children: [{ path: "/app", component: StarterPage }],
 }
 ```
+
+### Pasta `services`
+
+A pasta `services` contém as integrações com APIs externas e as funções relacionadas à comunicação com o backend. Cada serviço segue a estrutura modular:
+
+- Cada pasta representa um serviço específico e pode conter o arquivo  `service.ts` e `dto.ts`.
+- Uso de uma abstração do Fetch Api chamada BaseApi.
+- Disponibilidade para utilizar o GenericService, classe que implementa automaticamente um crud básico para API's padronizadas.
+- Centralização de URLs e headers para facilitar a manutenção.
+
+Segue documentação do GenericService:
+
+[Leia mais sobre a API](./src/services/genericService/README.md)
+
+---
 
 ## Como Usar Este Template
 
