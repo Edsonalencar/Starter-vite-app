@@ -1,16 +1,50 @@
-import { IApiService, Page, ResponseDTO } from "./interface";
+import { DefaultEndpointResolver } from "./DefaultEndpointResolver";
+import { IApiService, IEndpointResolver, Page, ResponseDTO } from "./interface";
 
 export class GenericService {
-  constructor(private url: string, private api: IApiService) {}
+  private resolver: IEndpointResolver;
 
-  getURL = () => this.url;
-  getApi = () => this.api;
+  constructor(
+    private url: string,
+    private api: IApiService,
+    resolver?: IEndpointResolver // Opcional, usa DefaultEndpointResolver se não fornecido
+  ) {
+    this.resolver = resolver ?? new DefaultEndpointResolver(url);
+  }
 
   create = async <T, U = unknown>(
     data: U,
     headers?: Record<string, string>
   ) => {
-    const res = await this.api.post<ResponseDTO<T>, U>(this.url, data, headers);
+    const res = await this.api.post<ResponseDTO<T>, U>(
+      this.resolver.getRoot(),
+      data,
+      headers
+    );
+    return res as ResponseDTO<T>;
+  };
+
+  get = async <T>(
+    queryParams?: Record<string, string | number>,
+    headers?: Record<string, string>
+  ) => {
+    const res = await this.api.get<ResponseDTO<T>>(
+      this.resolver.getRoot(),
+      queryParams,
+      headers
+    );
+    return res as ResponseDTO<T>;
+  };
+
+  getById = async <T>(
+    id: number | string,
+    headers?: Record<string, string>
+  ) => {
+    const res = await this.api.get<ResponseDTO<T>>(
+      this.resolver.getById(id),
+      undefined,
+      headers
+    );
     return res as ResponseDTO<T>;
   };
 
@@ -20,7 +54,7 @@ export class GenericService {
     headers?: Record<string, string>
   ) => {
     const res = await this.api.put<ResponseDTO<T>, U>(
-      `${this.url}/${id}`,
+      this.resolver.update(id),
       data,
       headers
     );
@@ -33,7 +67,7 @@ export class GenericService {
     headers?: Record<string, string>
   ) => {
     const res = await this.api.patch<ResponseDTO<T>, U>(
-      `${this.url}/${id}`,
+      this.resolver.patch(id),
       data,
       headers
     );
@@ -41,32 +75,8 @@ export class GenericService {
   };
 
   delete = async <T>(id: number | string, headers?: Record<string, string>) => {
-    const res = await this.api.delete<ResponseDTO<string>>(
-      `${this.url}/${id}`,
-      headers
-    );
-    return res as ResponseDTO<T>;
-  };
-
-  get = async <T>(
-    queryParams?: Record<string, string | number>,
-    headers?: Record<string, string>
-  ) => {
-    const res = await this.api.get<ResponseDTO<T>>(
-      this.url,
-      queryParams,
-      headers
-    );
-    return res as ResponseDTO<T>;
-  };
-
-  getById = async <T>(
-    id: number | string,
-    headers?: Record<string, string>
-  ) => {
-    const res = await this.api.get<ResponseDTO<T>>(
-      `${this.url}/${id}`,
-      undefined,
+    const res = await this.api.delete<ResponseDTO<T>>(
+      this.resolver.delete(id),
       headers
     );
     return res as ResponseDTO<T>;
@@ -78,7 +88,7 @@ export class GenericService {
     headers?: Record<string, string>
   ) => {
     const res = await this.api.post<ResponseDTO<Page<T>>, U>(
-      `${this.url}/page/${page}`,
+      this.resolver.getPage(page),
       data,
       headers
     );

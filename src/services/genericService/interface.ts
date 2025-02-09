@@ -26,6 +26,15 @@ export interface IApiService {
   ): Promise<T>;
 }
 
+export interface IEndpointResolver {
+  getRoot(): string;
+  getById(id: string | number): string;
+  update(id: string | number): string;
+  delete(id: string | number): string;
+  getPage(page: number): string;
+  patch(id: string | number): string;
+}
+
 export interface ResponseDTO<T> {
   data?: T | any;
   time: string;
