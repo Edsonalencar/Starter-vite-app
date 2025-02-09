@@ -35,7 +35,13 @@ import axios from "axios";
 import { GenericService } from "./GenericService";
 import { IApiService } from "./IApiService";
 
-const apiInstance: IApiService = axios.create({ baseURL: "https://api.example.com" }) as IApiService;
+const apiInstance: IApiService = axios.create({
+  baseURL: "https://api.example.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const UserService = new GenericService('/payment/customers', apiInstance);
 ```
 
