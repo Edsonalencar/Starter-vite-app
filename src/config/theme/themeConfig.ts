@@ -1,27 +1,72 @@
-import type { ThemeConfig } from "antd";
+import { theme, ThemeConfig } from "antd";
 
-export const theme: ThemeConfig = {
+export const lightTheme: ThemeConfig = {
+  algorithm: theme.defaultAlgorithm, // Tema Claro
   token: {
     fontSize: 16,
-    colorPrimary: "#FFB300",
-    borderRadius: 4,
+    colorPrimary: "#5D9C59",
+    borderRadius: 8,
+    colorTextBase: "#474d5a",
   },
-  components:{
-    Menu:{
-      iconSize:25,
-      colorBgContainer: "#FFB300",
-      colorPrimary: "#FFB300",
-      colorText: "#FFF",
+  components: {
+    Menu: {
+      iconSize: 15,
+      fontSize: 15,
+      colorBgBase: "transparent",
+      colorBgContainer: "transparent",
     },
-    Button:{
-      borderRadius:2,
+    Button: {
+      borderRadius: 8,
     },
-    Input:{
-      borderRadius:2
+    Input: {
+      borderRadius: 8,
     },
-    Layout:{
+    Layout: {
       headerBg: "#fff",
-      headerColor: "#fff",
+      headerColor: "#000",
+      bodyBg: "#fff",
     },
-  }
+    Table: {
+      fontSize: 15,
+    },
+    Typography: {
+      colorText: "#000",
+    },
+  },
+};
+
+export const darkTheme: ThemeConfig = {
+  algorithm: theme.darkAlgorithm, // Tema Escuro
+  token: {
+    fontSize: 16,
+    colorPrimary: "#5D9C59",
+    borderRadius: 8,
+    colorTextBase: "#E0E0E0",
+    colorBgContainer: "#1a1a1a",
+  },
+  components: {
+    Menu: {
+      iconSize: 15,
+      fontSize: 15,
+      colorBgBase: "transparent",
+      colorBgContainer: "transparent",
+    },
+    Button: {
+      borderRadius: 8,
+    },
+    Input: {
+      borderRadius: 8,
+    },
+    Layout: {
+      headerBg: "#222",
+      headerColor: "#FFF",
+      bodyBg: "#1a1a1a",
+    },
+    Table: {
+      fontSize: 15,
+    },
+    Typography: {
+      colorText: "#E0E0E0",
+    },
+  },
 };

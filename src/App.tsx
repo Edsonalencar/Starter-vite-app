@@ -1,12 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ConfigProvider } from "antd";
 import { ToastContainer } from "react-toastify";
-import { theme } from "./config/theme/themeConfig";
 import { AuthProvider } from "./contexts/AuthContext";
 import { RenderRouter } from "./types";
 import "react-toastify/dist/ReactToastify.css";
 import { routes } from "./config/routes";
+import { ThemeProviderConfig } from "./components/organisms/ThemeProviderConfig";
 
 const App: React.FC = () => {
   const renderRoutes = (routes: RenderRouter[]) => {
@@ -19,8 +18,8 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <ConfigProvider direction="ltr" theme={theme}>
-        <AuthProvider>
+      <AuthProvider>
+        <ThemeProviderConfig>
           <ToastContainer
             position="bottom-right"
             autoClose={3000}
@@ -35,8 +34,8 @@ const App: React.FC = () => {
           />
           {/* Controle de rotas do sistema */}
           <Routes>{renderRoutes(routes)}</Routes>
-        </AuthProvider>
-      </ConfigProvider>
+        </ThemeProviderConfig>
+      </AuthProvider>
     </Router>
   );
 };
