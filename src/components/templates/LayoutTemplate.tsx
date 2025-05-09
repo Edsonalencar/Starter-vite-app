@@ -1,46 +1,45 @@
-import { Button, Layout, Menu, theme } from "antd";
+import { Layout, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Header } from "antd/es/layout/layout";
-import { useState } from "react";
+import { GiSergeant } from "react-icons/gi";
+
 import { Outlet } from "react-router-dom";
 import { MenuNavigate } from "../molecules/MenuNavigate";
+import { AppHeader } from "../molecules/appHeader/Header";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 export const LayoutTemplate: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const { darkMode } = useAuthContext();
+
   const {
-    token: { colorBgContainer, colorPrimary },
+    token: { colorTextBase },
   } = theme.useToken();
 
   return (
-    <Layout hasSider className="h-screen">
+    <Layout hasSider className="min-h-screen">
       <Sider
         trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{ background: colorPrimary }}
+        theme="light"
+        width={256}
+        className="border-r border-gray-200 border-solid"
+        style={{
+          borderColor: darkMode ? "#222" : "#e5e7eb",
+        }}
       >
-        <div className="flex items-center w-full truncate justify-center p-4 mb-3">
-          <span className="font-extrabold text-xl text-[#FFF]">
-            {collapsed ? "SP" : "Starter App"}
+        <div className=" pl-7 p-2.5 my-1">
+          <span
+            className="font-semibold text-lg flex items-center gap-2"
+            style={{ color: colorTextBase }}
+          >
+            <GiSergeant className="text-primary" />
+            Torque Tech
           </span>
         </div>
+
         <MenuNavigate />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
-        <section className="p-4">
+        <AppHeader />
+        <section className="px-8 py-4">
           {/* Renderiza as paginas do react router dom */}
           <Outlet />
         </section>
