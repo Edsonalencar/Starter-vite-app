@@ -3,7 +3,7 @@ import { z } from "zod";
 const envSchema = z.object({
   VITE_BACKEND: z.string().url().default("http://localhost:8080"),
   VITE_FRONTEND: z.string().url().default("http://localhost:3000"),
-  VITE_SECRET_KEY: z.string().url().default("brocolis"),
+  VITE_SECRET_KEY: z.string().default("brocolis"),
   VITE_NEXT_AUTH_TOKEN_NAME: z.string().default("nextauth.token"),
   VITE_NEXT_AUTH_REDIRECT_NAME: z.string().default("nextauth.redirect"),
 });

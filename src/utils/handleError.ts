@@ -1,4 +1,4 @@
-import { AbstractException } from "@/services/baseApi/handler/AbstractException";
+import { AbstractException } from "@/services/api/handler/exceptions/AbstractException";
 import { toast } from "react-toastify";
 
 interface TypeErrors {
